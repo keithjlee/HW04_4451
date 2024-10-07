@@ -1,0 +1,17 @@
+name = "HW04_4451"
+uuid = "ba2a75cd-1859-4fa7-b156-eac12981bdab"
+authors = ["kjl-macbook <keith.ja.lee@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Asap = "763a8c06-ba23-41fc-b385-b3b57b52403a"
+AsapOptim = "d81720e7-9d76-4c66-a69e-8f07ca321cc4"
+GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
+LatinHypercubeSampling = "a5e1c1ea-c99a-51d3-a14d-a9a37257b02d"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Nonconvex = "01bcebdf-4d21-426d-b5c4-6132c1619978"
+NonconvexNLopt = "b43a31b8-ff9b-442d-8e31-c163daa8ab75"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
+Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
