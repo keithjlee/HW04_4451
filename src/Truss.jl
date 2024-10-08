@@ -1,9 +1,9 @@
 """
-    pratt_truss()
+    generate_pratt()
 
 This makes a Pratt truss in the correct geometry and topology as required in Problem 2. This is *not* a generalize constructor for any dimensions/discretization
 """
-function pratt_truss()
+function generate_pratt()
     
     # constants
     span = 12 #m
@@ -68,7 +68,7 @@ end
 
 function interactive_pratt()
 
-    model = pratt_truss()
+    model = generate_pratt()
 
     #variable bounds
     dymin = -3.0

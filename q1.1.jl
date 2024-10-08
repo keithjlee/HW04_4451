@@ -16,7 +16,8 @@ begin
     bounds = [(xmin, xmax), (zmin, zmax)]
 end
 
-n_total_samples = 1500
+n_total_samples = 500
+cull_factor = 25
 
 #=
 RANDOM SAMPLING
@@ -37,7 +38,7 @@ for (x,z) in zip(x_random, z_random)
 end
 
 fl_best = minimum(fl_random)
-i_valid = findall(fl_random .<= 20fl_best)
+i_valid = findall(fl_random .<= cull_factor*fl_best)
 
 begin
     fig = Figure()
@@ -45,7 +46,7 @@ begin
         fig[1,1],
         xlabel = "X [m]",
         ylabel = "Z [m]",
-        zlabel = "∑|FL|"
+        zlabel = "∑|FL|",
     )
 
     scatter!(
@@ -78,7 +79,7 @@ for (x, z) in zip(x_grid, z_grid)
 end
 
 fl_best = minimum(fl_grid)
-i_valid = findall(fl_grid .<= 20fl_best)
+i_valid = findall(fl_grid .<= cull_factor*fl_best)
 
 begin
     fig = Figure()
@@ -96,6 +97,7 @@ begin
 
     fig
 end
+
 
 # save("designspace_grid_n$n_total_samples.png", fig)
 
@@ -119,7 +121,7 @@ for (x, z) in zip(x_latin, z_latin)
 end
 
 fl_best = minimum(fl_latin)
-i_valid = findall(fl_latin .<= 20fl_best)
+i_valid = findall(fl_latin .<= cull_factor*fl_best)
 
 begin
     fig = Figure()

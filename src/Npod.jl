@@ -3,7 +3,7 @@
 
 Make an npod structure.
 """
-function generate_npod(n::Integer, free_node_position::Vector{<:Real}, radius = 10; E = 2.1e8, A = .00139, P = [-2.0, 0.0, -5.0])
+function generate_npod(n::Integer = 9, free_node_position::Vector{<:Real} = [0, 0, 10], radius = 10; E = 2.1e8, A = .00139, P = [-2.0, 0.0, -5.0])
 
     @assert length(free_node_position) == 3
 
@@ -38,7 +38,7 @@ function generate_npod(n::Integer, free_node_position::Vector{<:Real}, radius = 
     return model
 end
 
-function interactive_npod(;n = 9, initial_pos = [0, 0, 10], dxrange = (0, 15), dzrange = (-9, 5))
+function interactive_npod(;n = 9, initial_pos = [0, 0, 10], dxrange = (0, 15), dzrange = (-9.9, 5))
 
     #make the default npod
     model = generate_npod(n, initial_pos)

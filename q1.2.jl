@@ -19,6 +19,8 @@ end
 
 #sample
 n_total_samples = 1000
+cull_factor = 50
+
 samples_grid = grid_sampler(n_total_samples, 2, bounds)
 xsamples = getindex.(samples_grid, 1)
 zsamples = getindex.(samples_grid, 2)
@@ -56,7 +58,8 @@ for violation in lengths_violated
 end
 
 fl_best = minimum(fl)
-i_valid = findall(fl .<= 50fl_best)
+i_valid = findall(fl .<= cull_factor*fl_best)
+i_invalid = findall(fl .> cull_factor*fl_best)
 
 #plot
 begin

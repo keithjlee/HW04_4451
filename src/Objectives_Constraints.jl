@@ -33,8 +33,12 @@ function objective_energy(x, p::TrussOptParams)
     #get the sum of all lengths: ∑Lᵢ
     summed_lengths = sum(res.L)
 
-    #return the product
-    return abs(strain_energy * summed_lengths)
+    #note it's possible that a error occurs if a truss depth of 0 is given. Simply penalize with a large value
+    if strain_energy <= 0
+        return 1e6
+    else
+        return strain_energy * summed_lengths
+    end
 end
 
 """

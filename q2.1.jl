@@ -1,9 +1,7 @@
 using HW04_4451
 
 # generate the pratt truss
-model = pratt_truss()
-
-interactive_pratt()
+model = generate_pratt()
 
 # visualize the pratt truss with node/element labels
 visualize_2d(model; show_labels = true)
@@ -54,15 +52,25 @@ visualize_2d(res.model_opt)
 SAMPLING
 =#
 bounds = fill((-3.0, 3.0), 6)
-samples = random_sampler(20, 6, bounds)
-
-
 samples = random_sampler(2000, 6, bounds)
 energies = [OBJ(sample) for sample in samples]
 
 min_energy = minimum(energies)
-i_valid = findall(energies .<= )
+i_valid = findall(energies .<= 50min_energy)
 
-data = [[sample;energy] for (sample, energy) in zip(samples, energies)]
+data = [[sample;energy] for (sample, energy) in zip(samples[i_valid], energies[i_valid])]
 data_matrix = transpose(hcat(data...))
-data_matrix_normalized = data_matrix ./ maximum(data_matrix, dims = 1)
+data_matrix_normalized = data_matrix ./ maximum(abs.(data_matrix), dims = 1)
+
+color_by_performance = sortperm(energies[i_valid])
+cr = (1, length(color_by_performance))
+
+fig = Figure()
+ax = Axis(fig[1,1])
+for i in axes(data_matrix_normalized,1)
+    c = color_by_performance[i]
+    d = data_matrix_normalized[i, :]
+    lines!(d, color = fill(c, length(d)), alpha = .1, colorrange = cr)
+end
+
+fig

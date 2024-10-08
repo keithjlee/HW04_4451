@@ -1,7 +1,7 @@
 using HW04_4451
 
 # generate a pratt truss of the specified geometry 
-model = pratt_truss()
+model = generate_pratt()
 visualize_2d(model; show_labels = true)
 interactive_pratt()
 

@@ -44,12 +44,8 @@ begin
 
     #make a closure to make the function a single-argument function
     OBJ = x -> objective_function(x, params)
-    OBJ(x0)
-
     CSTR = x -> constraint_function(x, params)
-    CSTR(x0)
 end
-
 
 dx0 = 7.5
 dz0 = 0.
@@ -57,9 +53,8 @@ dz0 = 0.
 x0 = [dx0, dz0]
 res = unconstrained_optimization(x0, params, OBJ, NLoptAlg(:LN_COBYLA))
 
+res = constrained_optimization(x0, params, OBJ, CSTR, NLoptAlg(:LN_COBYLA))
 
 #make new optimized model
 visualize_3d(res.model_opt)
-
-
 lines(res.obj_history)

@@ -29,7 +29,7 @@ function constrained_optimization(x0::Vector{Float64}, params::P, objective_func
     # add constraints
     Nonconvex.add_ineq_constraint!(opt_model, constraint_function)
 
-    show_status && println(s)
+    show_status && println("OPTIMIZING")
 
     # perform optimization
     opt_clock_time = @elapsed begin

@@ -9,7 +9,7 @@ export generate_npod
 export interactive_npod
 
 include("Truss.jl")
-export pratt_truss
+export generate_pratt
 export interactive_pratt
 
 include("Visualization.jl")
