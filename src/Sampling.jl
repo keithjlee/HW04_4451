@@ -89,5 +89,5 @@ function latin_hypercube_sampler(nsamples::Integer, ndims::Integer, bounds::Vect
 
     samples = init .* (upperbounds .- lowerbounds) .+ lowerbounds
 
-    return [row for row in eachrow(samples)]
+    return [Vector(row) for row in eachrow(samples)]
 end

@@ -34,7 +34,7 @@ function objective_energy(x, p::TrussOptParams)
     summed_lengths = sum(res.L)
 
     #return the product
-    return strain_energy * summed_lengths
+    return abs(strain_energy * summed_lengths)
 end
 
 """

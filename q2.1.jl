@@ -48,3 +48,21 @@ res = unconstrained_optimization(params, OBJ, alg)
 
 lines(res.obj_history)
 visualize_2d(res.model_opt)
+
+
+#=
+SAMPLING
+=#
+bounds = fill((-3.0, 3.0), 6)
+samples = random_sampler(20, 6, bounds)
+
+
+samples = random_sampler(2000, 6, bounds)
+energies = [OBJ(sample) for sample in samples]
+
+min_energy = minimum(energies)
+i_valid = findall(energies .<= )
+
+data = [[sample;energy] for (sample, energy) in zip(samples, energies)]
+data_matrix = transpose(hcat(data...))
+data_matrix_normalized = data_matrix ./ maximum(data_matrix, dims = 1)

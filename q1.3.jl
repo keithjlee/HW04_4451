@@ -4,6 +4,7 @@ using HW04_4451
 model = generate_npod(9, [0, 0, 10])
 visualize_3d(model; show_labels = true)
 i_free = 10
+
 #=
 
 make spatial variables using AsapOptim
@@ -12,21 +13,15 @@ Note that in AsapOptim, spatial variables are defined using *incremental* positi
 IE if a spatial variable value is 5, it means "+5 from the initial node position" and not "at position 5"
 =#
 
-dx0 = 5.
-dz0 = 5.
-
 begin
-    xvar = SpatialVariable(model.nodes[i_free], dx0, -0.01, 15., :X) # (node, initial value, lowerbound, upperbound, direction)
-    zvar = SpatialVariable(model.nodes[i_free], dz0, -9.9, 10., :Z)
+    xvar = SpatialVariable(model.nodes[i_free], 0., -0.01, 15., :X) # (node, initial value, lowerbound, upperbound, direction)
+    zvar = SpatialVariable(model.nodes[i_free], 0., -9., 10., :Z)
 
     #collect variables
     variables = [xvar, zvar]
 
     #make optimization parameters
     params = TrussOptParams(model, variables)
-
-    #initial starting values
-    x0 = params.values
 
     #make objective function
     function objective_function(x, p)
@@ -55,9 +50,12 @@ begin
     CSTR(x0)
 end
 
-withgradient(OBJ, x0)
 
-res = unconstrained_optimization(params, OBJ, NLoptAlg(:LN_BOBYQA))
+dx0 = 7.5
+dz0 = 0.
+
+x0 = [dx0, dz0]
+res = unconstrained_optimization(x0, params, OBJ, NLoptAlg(:LN_COBYLA))
 
 
 #make new optimized model
