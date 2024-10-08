@@ -2,9 +2,8 @@ using HW04_4451
 
 #make a model with a centered free node 
 model = generate_npod(9, [0, 0, 10])
-visualize_model(model)
-free_node = model.nodes[10]
-
+visualize_3d(model; show_labels = true)
+i_free = 10
 #=
 
 make spatial variables using AsapOptim
@@ -14,11 +13,11 @@ IE if a spatial variable value is 5, it means "+5 from the initial node position
 =#
 
 dx0 = 5.
-dz0 = -5.
+dz0 = 5.
 
 begin
-    xvar = SpatialVariable(free_node, dx0, -0.01, 15., :X) # (node, initial value, lowerbound, upperbound, direction)
-    zvar = SpatialVariable(free_node, dz0, -9., 5., :Z)
+    xvar = SpatialVariable(model.nodes[i_free], dx0, -0.01, 15., :X) # (node, initial value, lowerbound, upperbound, direction)
+    zvar = SpatialVariable(model.nodes[i_free], dz0, -9.9, 10., :Z)
 
     #collect variables
     variables = [xvar, zvar]
@@ -58,33 +57,11 @@ end
 
 withgradient(OBJ, x0)
 
-begin
-    alg = NLoptAlg(:LD_MMA)
-    opts = NLoptOptions(
-        maxtime = 60,
-        ftol_rel = 1e-12,
-        ftol_abs = 1e-12,
-        xtol_rel = 1e-8
-    )
-end
+res = unconstrained_optimization(params, OBJ, NLoptAlg(:LN_BOBYQA))
 
-begin
-    F = TraceFunction(OBJ)
-    opt_model = Nonconvex.Model(F)
-    addvar!(opt_model, params.lb, params.ub)
-    add_ineq_constraint!(opt_model, CSTR)
-
-    # solve
-    optimization_results = Nonconvex.optimize(opt_model, alg, x0, options = opts)
-    @show x_opt = optimization_results.minimizer
-    @show obj_opt = optimization_results.minimum
-
-    obj_history = getproperty.(F.trace, :output)
-    x_history = getproperty.(F.trace, :input)
-end
 
 #make new optimized model
-optimized_model = updatemodel(params, x_opt)
-visualize_model(optimized_model)
+visualize_3d(res.model_opt)
 
-lines(obj_history)
+
+lines(res.obj_history)

@@ -8,12 +8,10 @@ begin
     xmin = 0.
     xmax = 2radius
 
-    xbounds = (xmin, xmax)
-
-    zmin = 2.
+    zmin = .1
     zmax = 2radius
 
-    zbounds = (zmin, zmax)
+    bounds = [(xmin, xmax), (zmin, zmax)]
 
     lmin = 10
     lmax = 30
@@ -21,9 +19,9 @@ end
 
 #sample
 n_total_samples = 1000
-samples_grid = grid_sampler_2d(n_total_samples, xbounds, zbounds)
-xsamples = samples_grid[:, 1]
-zsamples = samples_grid[:, 2]
+samples_grid = grid_sampler(n_total_samples, 2, bounds)
+xsamples = getindex.(samples_grid, 1)
+zsamples = getindex.(samples_grid, 2)
 
 fl = Float64[]
 lengths_violated = Bool[]
@@ -57,6 +55,9 @@ for violation in lengths_violated
     end
 end
 
+fl_best = minimum(fl)
+i_valid = findall(fl .<= 50fl_best)
+
 #plot
 begin
     fig = Figure()
@@ -68,8 +69,8 @@ begin
     )
 
     scatter!(
-        xsamples, zsamples, fl,
-        color = pt_colors
+        xsamples[i_valid], zsamples[i_valid], fl[i_valid],
+        color = pt_colors[i_valid]
     )
 
     fig

@@ -1,5 +1,7 @@
 using HW04_4451
 
+interactive_npod()
+
 # problem constants
 begin
     nlegs = 9
@@ -8,34 +10,34 @@ begin
     xmin = 0.
     xmax = 15
 
-    xbounds = (xmin, xmax)
-
-    zmin = 1
+    zmin = .1
     zmax = 15
 
-    zbounds = (zmin, zmax)
+    bounds = [(xmin, xmax), (zmin, zmax)]
 end
 
-n_total_samples = 500
+n_total_samples = 1500
 
 #=
 RANDOM SAMPLING
 =#
 
-samples_random = random_sampler_2d(n_total_samples, xbounds, zbounds)
-xsamples = samples_random[:, 1]
-zsamples = samples_random[:, 2]
+samples_random = random_sampler(n_total_samples, 2, bounds)
+x_random = [sample[1] for sample in samples_random]
+z_random = [sample[2] for sample in samples_random]
 
-fl = Float64[]
-for (x,z) in zip(xsamples, zsamples)
+fl_random = Float64[]
+for (x,z) in zip(x_random, z_random)
     pos = [x, 0, z]
-
     model = generate_npod(nlegs, pos)
     f = Asap.axial_force.(model.elements)
     l = length.(model.elements)
 
-    push!(fl, sum(abs.(f) .* l))
+    push!(fl_random, sum(abs.(f) .* l))
 end
+
+fl_best = minimum(fl_random)
+i_valid = findall(fl_random .<= 20fl_best)
 
 begin
     fig = Figure()
@@ -47,8 +49,8 @@ begin
     )
 
     scatter!(
-        xsamples, zsamples, fl,
-        color = fl,
+        x_random[i_valid], z_random[i_valid], fl_random[i_valid],
+        color = fl_random[i_valid],
     )
 
     fig
@@ -60,20 +62,23 @@ end
 GRID SAMPLING
 =#
 
-samples_grid = grid_sampler_2d(n_total_samples, xbounds, zbounds)
-xsamples = samples_grid[:, 1]
-zsamples = samples_grid[:, 2]
+samples_grid = grid_sampler(n_total_samples, 2, bounds)
+x_grid = getindex.(samples_grid, 1)
+z_grid = getindex.(samples_grid, 2)
 
-fl = Float64[]
-for (x, z) in zip(xsamples, zsamples)
+fl_grid = Float64[]
+for (x, z) in zip(x_grid, z_grid)
     pos = [x, 0, z]
 
     model = generate_npod(nlegs, pos)
     f = Asap.axial_force.(model.elements)
     l = length.(model.elements)
 
-    push!(fl, sum(abs.(f) .* l))
+    push!(fl_grid, sum(abs.(f) .* l))
 end
+
+fl_best = minimum(fl_grid)
+i_valid = findall(fl_grid .<= 20fl_best)
 
 begin
     fig = Figure()
@@ -85,8 +90,8 @@ begin
     )
 
     scatter!(
-        xsamples, zsamples, fl,
-        color = fl,
+        x_grid[i_valid], z_grid[i_valid], fl_grid[i_valid],
+        color = fl_grid[i_valid],
     )
 
     fig
@@ -98,20 +103,23 @@ end
 LATIN HYPERCUBE SAMPLING
 =#
 
-samples_hypercube = latin_hypercube_sampler_2d(n_total_samples, xbounds, zbounds)
-xsamples = samples_hypercube[:, 1]
-zsamples = samples_hypercube[:, 2]
+samples_latin = latin_hypercube_sampler(n_total_samples, 2, bounds)
+x_latin = getindex.(samples_random, 1)
+z_latin = getindex.(samples_random, 2)
 
-fl = Float64[]
-for (x, z) in zip(xsamples, zsamples)
+fl_latin = Float64[]
+for (x, z) in zip(x_latin, z_latin)
     pos = [x, 0, z]
 
     model = generate_npod(nlegs, pos)
     f = Asap.axial_force.(model.elements)
     l = length.(model.elements)
 
-    push!(fl, sum(abs.(f) .* l))
+    push!(fl_latin, sum(abs.(f) .* l))
 end
+
+fl_best = minimum(fl_latin)
+i_valid = findall(fl_latin .<= 20fl_best)
 
 begin
     fig = Figure()
@@ -123,9 +131,8 @@ begin
     )
 
     scatter!(
-        xsamples, zsamples, fl,
-        color = fl,
-        colormap = :viridis
+        x_latin[i_valid], z_latin[i_valid], fl_latin[i_valid],
+        color = fl_latin[i_valid],
     )
 
     fig
