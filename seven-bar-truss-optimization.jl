@@ -112,6 +112,15 @@ fig
 
 # save("readme_figures/7bar_2.png", fig)
 
+#sampling and parameters
+bounds = [(dy_min, dy_max)]
+nsamples = 100
+
+samples = random_sampler(nsamples, 1, bounds)
+sampled_models = [updatemodel(params, sample) for sample in samples]
+fig = visualize_2d(rand(sampled_models))
+# autolimits!(fig.content[1])
+# save("readme_figures/7bar_sampling.png", fig)
 
 #test gradient
 do0 = gradient(OBJ, x0)[1]

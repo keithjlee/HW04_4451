@@ -6,20 +6,22 @@ begin
     radius = 10
 
     xmin = 0.
-    xmax = 2radius
+    xmax = 20
 
     zmin = .1
-    zmax = 2radius
+    zmax = 20
 
     bounds = [(xmin, xmax), (zmin, zmax)]
 
     lmin = 10
     lmax = 30
+
+    model = generate_npod(nlegs, [0, 0, 10])
 end
 
 #sample
-n_total_samples = 1000
-cull_factor = 50
+n_total_samples = 500
+cull_factor = 25
 
 samples_grid = grid_sampler(n_total_samples, 2, bounds)
 xsamples = getindex.(samples_grid, 1)

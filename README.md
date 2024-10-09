@@ -13,6 +13,18 @@ Remember to `instantiate` the environment in the beginning to download and insta
 
 The rest of this readme will act as a reference point on using the Julia functions that have been defined for you, as well as basics on visualization, list querying, etc.
 
+## Dependencies
+A lot of external Julia packages are used to perform optimization, visualization, and sampling. These have been pre-loaded for you, but will most likely be useful again for your future work if you plan on using Julia. Look them up and find their documentation if you want to explore more than what is offered in this environment:
+
+1. `Asap.jl` For structural analysis
+2. `AsapOptim.jl` For formulating optimization problems
+3. `Nonconvex.jl` and `NonconvexNLopt.jl` for actual optimization
+4. `Zygote.jl` for Automatic Differentiation
+5. `LatinHypercubeSampling.jl` (self explanatory)
+6. `GLMakie.jl` for visualization
+
+# Overview
+
 ## `generate_npod`
 A npod generator is predefined for you: `generate_npod(n::Integer = 9, free_node_position::Vector{<:Real} = [0, 0, 10], radius = 10; E = 2.1e8, A = .00139, P = [-2.0, 0.0, -5.0])`
 
@@ -330,6 +342,24 @@ fig
 ```
 ![](readme_figures/7bar_2.png)
 
+## `updatemodel`
+Use `updatemodel(params, x)` to create a new structural model given your optimization parameters `params` and a design variable `x`. This will be useful in Problem 2 in conjunction with sampling:
+```julia
+#set this up in a way we can use our sampler functions
+bounds = [(dy_min, dy_max)]
+nsamples = 100
+
+samples = random_sampler(nsamples, 1, bounds)
+
+#make a new model for each sampled parameter
+sampled_models = [updatemodel(params, sample) for sample in samples]
+
+#visualize a random sampled model
+fig = visualize_2d(rand(sampled_models))
+```
+
+![](readme_figures/7bar_sampling.png)
+
 ## Taking the gradient
 Remember our discussion on Automatic Differentiation and structural analysis? `AsapOptim` allows for AD to be applied to our structural problems! We can use `Zygote.jl`, which is already loaded for you, to compute this gradient (in this case, it's a derivative since we only have one independent variable):
 
@@ -448,3 +478,18 @@ Gives:
 ![](readme_figures/7bar_8.png)
 
 Interestingly, a gradient-based algorithm has given us a less-smooth path in the design space, but ultimately provides the same answer, also in about half the amount of iterations.
+
+## Constraints
+A length constrain function is also defined for you:
+```julia
+constraint_lengths(x, p::TrussOptParams, lmin, lmax)
+```
+
+To use this for optimization, also make a closure, e.g.:
+```julia
+CSTR = x -> constraint_lengths(x, params, 5, 50)
+```
+
+And use `constrained optimization()` instead of `unconstrained_optimization()`
+
+Make sure your starting design variable does not violate the constraints!
