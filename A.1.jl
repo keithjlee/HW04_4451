@@ -24,4 +24,12 @@ visualize_3d(model; show_labels = true)
 
 #=
 YOUR CODE BELOW
+
+Hint: get the axial forces of model elements via:
+
+axial_force = Asap.axial_force(model.elements[1]) # for a single element
+axial_forces = Asap.axial_force.(model.elements) # for all elements
+
+And get the lengths of elements via:
+element_lengths = length.(model.elements)
 =#
