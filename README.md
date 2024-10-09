@@ -330,7 +330,7 @@ This makes `OBJ` a specialized version of `objective_FL` that is specific to our
 o0 = OBJ(x0) #350kNm
 ```
 
-We could even do some ~Design Space Sampling~:
+We could even do some Design Space Sampling:
 ```julia
 xrange = range(dy_min, dy_max, 100) #100 samples between our variable bounds
 ovalues = [OBJ([x]) for x in xrange]
