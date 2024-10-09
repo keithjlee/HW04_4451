@@ -1,8 +1,5 @@
 using HW04_4451
 
-#initial exploration
-interactive_npod()
-
 # problem constants
 begin
     nlegs = 9
